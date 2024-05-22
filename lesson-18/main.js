@@ -2,6 +2,7 @@
 "use strict";
 
 const express = require("express"), // express를 요청
+  mongoose = require("mongoose"),
   layouts = require("express-ejs-layouts"), // express-ejs-layout의 요청
   homeController = require("./controllers/homeController"),
   subscribersController = require("./controllers/subscribersController"),
@@ -13,10 +14,13 @@ const express = require("express"), // express를 요청
  * Listing 16.1 (p. 228)
  * 애플리케이션에 Mongoose 설정
  */
-const mongoose = require("mongoose"); // mongoose를 요청
-// 데이터베이스 연결 설정
-mongoose.connect("mongodb://127.0.0.1:27017/ut-nodejs", {
-  useNewUrlParser: true,
+mongoose.connect(
+  "mongodb+srv://chlwhdgh0810:1234@ut-node.xbnafap.mongodb.net/?retryWrites=true&w=majority&appName=ut-node", // Atlas 경로
+);
+
+const db = mongoose.connection;
+db.once("open", () => {
+  console.log("Connected to MONGODB!!!");
 });
 
 app.set("port", process.env.PORT || 3000);
@@ -57,7 +61,11 @@ app.get("/subscribers", subscribersController.getAllSubscribers); // 모든 구�
  * userController.js를 위에서 요청
  */
 // @TODO: index 라우트 생성
-
+app.get(
+  "/users",                 // 경로
+  usersController.index,
+  usersController.indexView
+);
 /**
  * Listing 12.12 (p. 184)
  * 에러 처리 라우트
